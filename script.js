@@ -91,3 +91,30 @@ function displayRepo(repo) {
     </ul>
   `;
 }
+
+
+async function fetchRandomRepo(language) {
+  statusDiv.textContent = "Cargando repositorios...";
+  repoContainer.innerHTML = "";
+  refreshBtn.hidden = true;
+
+  try {
+    const response = await fetch(`https://api.github.com/search/repositories?q=language:${language}&sort=stars&order=desc&per_page=50`);
+    const data = await response.json();
+
+    if (!data.items || data.items.length === 0) {
+      statusDiv.textContent = "No se encontraron repositorios.";
+      return;
+    }
+
+    const randomRepo = data.items[Math.floor(Math.random() * data.items.length)];
+    displayRepo(randomRepo);
+    refreshBtn.hidden = false;
+    statusDiv.textContent = "";
+
+    // Guardar para refrescar
+    window.currentRepos = data.items;
+  } catch (error) {
+    statusDiv.textContent = "❌ Error al cargar los repositorios.";
+  }
+}
