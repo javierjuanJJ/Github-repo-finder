@@ -118,3 +118,22 @@ async function fetchRandomRepo(language) {
     statusDiv.textContent = "❌ Error al cargar los repositorios.";
   }
 }
+
+function displayRepo(repo) {
+  repoContainer.innerHTML = `
+    <h3><a href="${repo.html_url}" target="_blank">${repo.name}</a></h3>
+    <p>${repo.description || "Sin descripción"}</p>
+    <ul>
+      <li>⭐ Stars: ${repo.stargazers_count}</li>
+      <li>🍴 Forks: ${repo.forks_count}</li>
+      <li>🐛 Issues: ${repo.open_issues_count}</li>
+    </ul>
+  `;
+}
+
+refreshBtn.addEventListener("click", () => {
+  if (!window.currentRepos) return;
+  const randomRepo = window.currentRepos[Math.floor(Math.random() * window.currentRepos.length)];
+  displayRepo(randomRepo);
+});
+
